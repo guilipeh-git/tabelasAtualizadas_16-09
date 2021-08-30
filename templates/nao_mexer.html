@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>tabela</title>
+  <link rel="stylesheet" href="../static/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hina+Mincho&display=swap" rel="stylesheet">
+</head>
+<style>
+  *{
+    margin: 0;
+  }
+  body{
+    font-family: "Hina Mincho",sefif;
+    background: #fafbfa;
+  }
+  .titulo{
+    background:#821fa2;
+    padding: 10px;
+    text-align: center;
+    color: white;
+    
+  }
+  main{
+    padding: 30px 50px;
+  }
+  .card{
+    background:  #fff;
+    border: solid 1px #ccc;
+    padding: 20px;
+    margin-top: 15px;
+    border-radius: 5px;
+  }
+  .line-input{
+    display: grid;
+    margin-bottom:10px;
+  }
+  input{
+    padding: 10px;
+    border: solid 1px #ccc;
+    border-radius:4px;
+    outline: 0;
+  }
+  button{
+    border: solid 1px #ccc;
+    padding: 10px;
+    background-color: #821fa2;
+    border-radius: 5px;
+    color: white;
+    font-weight: bold;
+  }
+  button:hover{
+    background-color: rgb(66, 13, 116);
+    transition: all ease 0.3s;
+  }
+  .content{
+    margin: 15px 0 0 0;
+    
+  }
+  table{
+    border-collapse: collapse;
+    border: solid 1px #ccc;
+    width: 100%;
+  }
+  table{
+    background-color: rgb(222, 222, 222);
+    
+  }
+  table th,  td{
+    padding: 5px 10px;
+    text-align: left;
+    
+  }
+  table th{
+    background-color: rgb(173, 167, 167);
+  }
+  .center{
+    text-align: center;
+  }
+  table td img{
+    width: 20px;
+    margin:0 5px;
+  }
+
+</style>
+
+<body>
+  <header class="titulo">
+    <h1>Tabela</h1>
+  </header>
+
+  <main class="produtos">
+    <div class="sub-titulo">
+      <h2>Tabela 1.0</h2>
+      <span>lista de produtos da minha tabela.</span>
+    </div>
+    <div class="card">
+      <div class="line-input">
+        <label>Produto </label>
+        <input type="text" id="produto" placeholder="Nome do produto" value="9"> 
+      </div>
+      <div class="line-input">
+        <label>Valor </label>
+        <input type="text" id="preco" placeholder="Preço do produto" value="g">
+      </div>
+        
+      <button onclick="tabela.salvar()" id="btn1">Salvar</button>
+      <button onclick="tabela.cancelar()">Cancelar</button>
+    </div>
+  
+    <div class="content">
+      <table border=1;>
+        <thead>
+          <th class="center">id</th>
+          <th>Produto</th>
+          <th>preço</th>
+          <th class="center">Ações</th>
+        </thead>
+        <tbody id="minhaTabela">
+          
+
+        </tbody>
+      </table>
+    </div>
+  </main>
+      
+
+  
+  <script>
+    class Tabela{
+      constructor(){
+        
+        this.editId = null;
+        this.arrayProdutos = [{id:"1",NomeProduto:"nao sei",preco:"10 reais"},{id:"2",NomeProduto:"nao sei",preco:"10 reais"}];
+        this.id = this.arrayProdutos.length + 1;
+        console.log(this.arrayProdutos.length)
+        this.listaTabela();
+      }
+      salvar(){
+        
+        
+        let produto = this.lerDados();
+        
+        if(this.validarCampo(produto)){
+          if(this.editId == null){
+            this.adicionar(produto);
+          }
+          else{
+            this.atualizar(this.editId, produto);
+            ///////////////
+          }
+        }
+        console.log(this.arrayProdutos)
+        this.listaTabela();
+        this.cancelar();
+        
+      }
+
+      listaTabela(){
+        //lista dinamica da tela.
+        let tbody = document.getElementById('minhaTabela');
+        tbody.innerText = "";
+
+        for( let i=0; i < this.arrayProdutos.length; i++) {
+         let tr = tbody.insertRow();
+
+         let td_id = tr.insertCell();
+         let td_produto = tr.insertCell();
+         let td_preco = tr.insertCell();
+         let td_acao = tr.insertCell();
+
+         td_id.innerText = this.arrayProdutos[i].id;
+         td_produto.innerText = this.arrayProdutos[i].NomeProduto;
+         td_preco.innerText = this.arrayProdutos[i].preco;
+
+         td_id.classList.add('center');
+        
+
+         let imgEdit = document.createElement('img');
+         imgEdit.src = "../img/edita_1.svg";
+         td_acao.appendChild(imgEdit);
+
+         imgEdit.setAttribute("onclick","tabela.editar("+ JSON.stringify(this.arrayProdutos[i]) +")");
+
+         var delet = document.createElement("img");
+         delet.src = "../img/delet_1.svg";
+         td_acao.appendChild(delet);
+         delet.setAttribute("onclick","tabela.deletar("+ this.arrayProdutos[i].id +")");
+
+
+         td_acao.classList.add('center');
+
+        }
+
+      
+        
+      }
+      adicionar(produto){
+        //adiciona produtos no array
+        this.arrayProdutos.push(produto)
+        this.id++;
+      }
+    
+      lerDados(){
+        let produto = {};
+        produto.id = this.id;
+        produto.NomeProduto = document.getElementById('produto').value;
+        produto.preco = document.getElementById('preco').value;
+
+        return produto;
+      }
+
+      validarCampo(produto){
+        let msg = "";
+        if(this.lerDados().NomeProduto == ""){
+          msg += "Insira o nome do produto\n"
+        }
+        if(this.lerDados().preco == ""){
+          msg += "Insira o preço do produto\n"
+        }
+        if(msg != ""){
+          alert(msg);
+          return false;
+        } 
+        return true;
+      }
+      cancelar(){
+        document.getElementById('produto').value = "";
+        document.getElementById('preco').value = "";
+        this.editId = null;
+        document.getElementById("btn1").innerText = "Salvar";
+        }
+      deletar(id){
+        let confimar = confirm('Deletar linha toda a linha : ' + id);
+
+        if(confimar){
+
+          let tbody = document.getElementById('minhaTabela');
+
+          for(let i = 0; i < this.arrayProdutos.length; i++){
+            if(this.arrayProdutos[i].id == id){
+              this.arrayProdutos.splice(i,1);
+              tbody.deleteRow(i);
+              this.id = this.arrayProdutos.length + 1;
+            }
+          }
+          console.log(this.arrayProdutos)
+        }
+      }
+
+      editar(dados){
+        if(confirm("Editar item !!! " + dados.id)){
+          this.editId = dados.id;
+          document.getElementById('produto').value = dados.NomeProduto;
+          document.getElementById('preco').value = dados.preco;
+          document.getElementById('btn1').innerText = "Atualizar";
+        }
+      }
+
+
+      atualizar(id, produto){
+        for(let i = 0; i < this.arrayProdutos.length;i++){
+          if(this.arrayProdutos[i].id == id){
+            this.arrayProdutos[i].NomeProduto = produto.NomeProduto;
+            this.arrayProdutos[i].preco = produto.preco;
+          }
+        }
+        document.getElementById('btn1').innerText = "Salvar";
+        this.editId = null;
+      }
+        
+      }
+      
+
+    var tabela = new Tabela();
+  </script>
+
+</body>
+</html>
