@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>tabela</title>
+  <link rel="stylesheet" href="../static/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hina+Mincho&display=swap" rel="stylesheet">
+</head>
+<style>
+  *{
+    margin: 0;
+  }
+  body{
+    
+    font-family: "Hina Mincho",sefif;
+    background: #fafbfa;
+  }
+  .titulo{
+    float: inline-end;
+    background:#1fa22a;
+    padding: 10px;
+    text-align: center;
+    color: white;
+    
+  }
+  main{
+    
+    
+    padding: 30px 30px;
+    
+  }
+  
+  .card{
+    display: flex;
+    flex-wrap: wrap;
+    border: solid 1px #ccc;
+    padding: 10px;
+    margin-top: 15px;
+    border-radius: 5px;
+    background-color: #cdd1d6;
+     
+  
+  }
+  .line-input{
+    display:grid;
+    margin-left: 10px;
+    margin-bottom:10px;
+    
+    
+  }
+  input{
+    width: 130px;
+    padding: 10px;
+    border: solid 1px #ccc;
+    border-radius:4px;
+    outline: 0;
+    
+  }
+  
+  button{
+    border: solid 1px #ccc;
+    padding: 10px;
+    background-color: #1fa22a;
+    border-radius: 5px;
+    color: white;
+    font-weight: bold;
+  }
+  button:hover{
+    background-color: rgb(66, 13, 116);
+    transition: all ease 0.3s;
+  }
+  .content{
+    margin: 15px 0 0 0;
+    
+  }
+  table{
+    border-collapse: collapse;
+    border: solid 1px #ccc;
+    width: 100%;
+  }
+  table{
+    background-color: rgb(222, 222, 222);
+    
+  }
+  table th,  td{
+    padding: 5px 10px;
+    text-align: left;
+    
+  }
+  table th{
+    background-color: rgb(173, 167, 167);
+  }
+  .center{
+    text-align: center;
+  }
+  table td img{
+    width: 20px;
+    margin:0 5px;
+  }
+  .teste{
+    margin-top:20px ;
+  }
+
+</style>
+
+<body>
+  
+  <header class="titulo">
+    <h1>Tabela</h1>
+  </header>
+
+  <main class="produtos">
+    <div class="sub-titulo">
+      <h2>Tabela 1.0</h2>
+      <span>Tabela de Planejamento</span>
+      <select name="mes" id="mes" onclick="tabela.bntFiltro()">
+        <option value="true">Filtro Mês</option>
+        <option value="true">Todos</option>
+        <option value="01">Janeiro</option>
+        <option value="02">Fevereiro</option>
+        <option value="03">Março</option>
+        <option value="04">Abril</option>
+        <option value="05">Maio</option>
+        <option value="06">Junho</option>
+        <option value="07">Julho</option>
+        <option value="08">Agosto</option>
+        <option value="09">Setembro</option>
+        <option value="10">Outubro</option>
+        <option value="11">Novembro</option>
+        <option value="12">Dezembro</option>
+      </select>
+      
+      <input type="hidden" id="lista_array" value="{{lista_array}}" name="data">
+    
+        <div class="card">
+        
+            <div class="line-input">
+              <label>Data</label>
+              <input type="date" id="id">
+            </div>
+              <div class="line-input">
+              <label>Heat_Planejado</label>
+              <input value="0" type="number" id="Heat_Planejado">
+            </div>
+              <div class="line-input">
+              <label>Heat_Real</label>
+              <input value="0" type="number" id="Heat_Real">
+            </div>
+            <div class="line-input">
+              <label>Energia_Planejado</label>
+              <input value="0" type="number" id="Energia_Planejado">
+            </div>
+            <div class="line-input">
+              <label>Energia_Real</label>
+              <input value="0" type="number" id="Energia_Real">
+            </div>
+            <div class="line-input">
+              <label>CO2_Planejado</label>
+              <input value="0" type="number" id="CO2_Planejado">
+            </div>
+            <div class="line-input">
+              <label>CO2_Real</label>
+              <input value="0" type="number" id="CO2_Real">
+            </div>
+              <div class="line-input">
+          </div>    
+        </div>
+
+    
+    <div class="teste">
+      <button type="submit" onclick="tabela.salvar()" id="btn1">Salvar</button>
+      <button onclick="tabela.cancelar()">Cancelar</button>
+      <input  type="submit"   id="botaoDelete">
+    </div>
+  
+  
+    <div class="content">
+      <table border=1;>
+        <thead>
+          <th class="center">Data</th>
+          <th>Heat_Planejado</th>
+          <th>Heat_Real</th>
+          <th>Energia_Planejado</th>
+          <th>Energia_Real</th>
+          <th>CO2_Planejado</th>
+          <th>CO2_Real</th>
+         
+          <th class="center">Ações</th>
+        </thead>
+        <tbody id="minhaTabela">
+          
+
+        </tbody>
+      </table>
+    </div>
+  </main>
+      
+
+  <script>
+    class Tabela{
+
+      constructor(){
+        
+        var lista = document.getElementById('lista_array').value
+
+        
+        
+        this.arrayLista = [{"Heat_Planejado":"3","Heat_Real":"10","Energia_Planejado":"9","Energia_Real":"5","CO2_Planejado":"8","CO2_Real":"56"}]//JSON.parse(lista);// trasforma lista na forma de array que o javascript consegue interpretar
+        this.arrayProdutos = this.filtro();
+        
+        this.listaTabela();
+        
+      }
+
+      bntFiltro(){
+        this.filtro();
+      }
+      filtro(){
+        var lista = [];
+        
+        for(let i = 0; i < this.arrayLista.length; i++){
+          if(this.arrayLista[i].id[5]+this.arrayLista[i].id[6] == document.getElementById('mes').value)
+            lista.push(this.arrayLista[i]);
+            
+          if(document.getElementById('mes').value == "true"){
+            lista.push(this.arrayLista[i]);
+            
+          }     
+      }
+      
+      this.arrayProdutos = lista.slice(); // slice serve para copiar
+      for(let i = 0; i < lista.length*1000; i++){
+        lista.shift(); // apaga o primeiro item da lista
+      }
+      
+      //console.log(this.arrayProdutos);
+      this.listaTabela()
+      return this.arrayProdutos;
+      
+
+    }
+
+    // verifica se a data ja existe
+    dataExiste(id){
+          for(let i=0; i< this.arrayProdutos.length; i++){
+            if(this.arrayProdutos[i].id == id){
+              alert('data ja existente!');
+              return false;
+            }
+          }
+          return true;
+        }
+
+        salvar(){
+      document.getElementById('mes').value = true;
+      this.bntFiltro();
+
+        //////////////////////////////////////////////////////////////////
+        let produto = this.lerDados();
+        
+        if(this.validarCampo(produto)){
+          if(this.editId == null){
+            
+           // let salva = this.arrayProdutos[3].id;
+            if(this.dataExiste(document.getElementById('id').value)){
+            this.adicionar(produto);
+            this.cancelar();
+            
+            }
+           
+          }
+          else{
+            
+              console.log(this.arrayProdutos)
+              this.atualizar(this.editId, produto);
+              this.arrayProdutos = this.arrayLista;
+            }
+          
+          }
+        
+          
+        this.arrayLista = this.arrayProdutos;
+        console.log(this.arrayProdutos)
+        document.getElementById('lista_array').value = JSON.stringify(this.arrayProdutos)
+        this.listaTabela();
+        
+
+        }
+
+      
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      fdate(i){
+        let p = this.arrayProdutos[i].id;
+        var date = [p[8]+p[9] + "-" + p[5]+p[6]+"-"+p[0]+p[1]+p[2]+p[3]];
+        return date[0];
+
+      }
+      listaTabela(){
+        //lista dinamica da tela.
+        let tbody = document.getElementById('minhaTabela');
+        tbody.innerText = "";
+
+        for( let i=0; i < this.arrayProdutos.length; i++) {
+         let tr = tbody.insertRow();
+
+         let td_id = tr.insertCell();
+         let td_Heat_Planejado = tr.insertCell();
+         let td_Heat_Real = tr.insertCell();
+         let td_Energia_Planejado = tr.insertCell();
+         let td_Energia_Real = tr.insertCell();
+         let td_CO2_Planejado = tr.insertCell();
+         let td_CO2_Real = tr.insertCell();
+         
+
+         
+         td_id.innerText = this.fdate(i);
+         td_Heat_Planejado.innerText = this.arrayProdutos[i].Heat_Planejado;
+         td_Heat_Real.innerText = this.arrayProdutos[i].Heat_Real;
+         td_Energia_Planejado.innerText = this.arrayProdutos[i].Energia_Planejado;
+         td_Energia_Real.innerText = this.arrayProdutos[i].Energia_Real;
+         td_CO2_Planejado.innerText = this.arrayProdutos[i].CO2_Planejado;
+         td_CO2_Real.innerText = this.arrayProdutos[i].CO2_Real;
+        
+         
+
+         td_id.classList.add('center');
+        
+
+         let imgEdit = document.createElement('img');
+         imgEdit.src = "../img/edita_1.svg";
+         imgEdit.alt = "Editar";
+         td_acao.appendChild(imgEdit);
+
+         imgEdit.setAttribute("onclick","tabela.editar("+ JSON.stringify(this.arrayProdutos[i]) +")");
+
+         var delet = document.createElement("img");
+         delet.src = "../img/delet_1.svg";
+         delet.alt = "Deletar";
+         td_acao.appendChild(delet);
+         delet.setAttribute("onclick","tabela.deletar("+ JSON.stringify(this.arrayProdutos[i].id) +")");
+
+
+         td_acao.classList.add('center');
+
+        }
+
+      
+        
+      }
+      adicionar(produto){
+        //adiciona produtos no array
+        
+        this.arrayProdutos.push(produto)
+        
+      }
+    
+      lerDados(){
+        let produto = {};
+        produto.id = document.getElementById('id').value;
+        produto.Heat_Planejado = document.getElementById('Heat_Planejado').value;
+        produto.Heat_Real = document.getElementById('Heat_Real').value;
+        produto.Energia_Planejado = document.getElementById('Energia_Planejado').value;
+        produto.Energia_Real = document.getElementById('Energia_Real').value;
+        produto.CO2_Planejado = document.getElementById('CO2_Planejado').value;
+        produto.CO2_Real = document.getElementById('CO2_Real').value;
+        
+        
+        /////////////////////////////////////////////////////////////////////////////////////////////////
+        //console.log(produto);
+        return produto;
+      }
+
+      validarCampo(produto){
+        let msg = "";
+        if(this.lerDados().id == ""){
+          msg += "Insira uma data.\n"
+        }
+        if(this.lerDados().Heat_Planejado == ""){
+          msg += "Insira o valor  da Heat_Planejado. \n"
+        }
+        if(this.lerDados().Heat_Real == ""){
+          msg += "Insira o valor da Heat_Real.\n"
+        }
+        if(this.lerDados().Energia_Planejado == ""){
+          msg += "Insira o valor da Energia_Planejado.\n"
+        }
+        if(this.lerDados().Energia_Real == ""){
+          msg += "Insira o valor da Energia_Real.\n"
+        }
+        if(this.lerDados().CO2_Planejado == ""){
+          msg += "Insira o valor da CO2_Planejado.\n"
+        }
+        if(this.lerDados().CO2_Real == ""){
+          msg += "Insira o valor da CO2_Real.\n"
+        }
+        if(msg != ""){
+          alert(msg);
+          return false;
+        } 
+        return true;
+      }
+      cancelar(){
+        document.getElementById('id').value = "";
+        document.getElementById('Heat_Planejado').value ="";
+        document.getElementById('Heat_Real').value = "";
+        document.getElementById('Energia_Planejado').value = "";
+        document.getElementById('Energia_Real').value = "";
+        document.getElementById('CO2_Planejado').value = "";
+        document.getElementById('CO2_Real').value = "";
+        
+
+
+        this.editId = null;
+        document.getElementById("btn1").innerText = "Salvar";
+        }
+      deletar(id){
+
+        let p = id;
+        var date = [p[8]+p[9] + "-" + p[5]+p[6]+"-"+p[0]+p[1]+p[2]+p[3]];
+
+        let confimar = confirm('Deletar linha toda a linha : ' + date);
+
+        if(confimar){
+
+          let tbody = document.getElementById('minhaTabela');
+          
+          for(let i = 0; i < this.arrayProdutos.length; i++){
+            if(this.arrayProdutos[i].id == id){
+              this.arrayProdutos.splice(i,1);
+              tbody.deleteRow(i);
+              this.id = this.arrayProdutos.length + 1;
+            }
+          }
+          //console.log(this.arrayProdutos)
+          this.cancelar();
+          this.botaoFormDelete();
+        }
+      }
+
+      editar(dados){
+       ///////role de formata data/////////////// 
+        let p = dados.id;
+        var date = [p[8]+p[9] + "-" + p[5]+p[6]+"-"+p[0]+p[1]+p[2]+p[3]];
+//////////////////////////////////////////////////////////////////
+        if(confirm("Editar data!!! " + date)){
+          
+          
+          this.editId = dados.id;
+          document.getElementById('id').value = dados.id;
+          document.getElementById('Heat_Planejado').value = dados.Heat_Planejado;
+          document.getElementById('Heat_Real').value = dados.Heat_Real;
+          document.getElementById('Energia_Planejado').value = dados.Energia_Planejado;
+          document.getElementById('Energia_Real').value = dados.Energia_Real;
+          document.getElementById('CO2_Planejado').value = dados.CO2_Planejado;
+          document.getElementById('CO2_Real').value = dados.CO2_Real;
+          
+
+          document.getElementById('btn1').innerText = "Atualizar";
+        
+        }
+        
+      }
+
+
+      atualizar(id, produto){
+        //document.getElementById('mes').value = true;
+        for(let i = 0; i < this.arrayProdutos.length;i++){
+          if(this.arrayProdutos[i].id == id){
+            this.arrayProdutos[i].id = produto.id;
+            this.arrayProdutos[i].Heat_Planejado = produto.Heat_Planejado;
+            this.arrayProdutos[i].Heat_Real = produto.Heat_Real;
+            this.arrayProdutos[i].Energia_Planejado = produto.Energia_Planejado;
+            this.arrayProdutos[i].Energia_Real = produto.Energia_Real;
+            this.arrayProdutos[i].CO2_Planejado = produto.CO2_Planejado;
+            this.arrayProdutos[i].CO2_Real = produto.CO2_Real;
+            
+            this.cancelar();
+          }
+        }
+        /*document.getElementById('btn1').innerText = "Salvar";
+        this.editId = null;*/
+      }
+      botaoFormDelete(){
+        document.getElementById('mes').value = true;
+        document.getElementById('botaoDelete').click();
+      }
+      }
+      
+
+    var tabela = new Tabela();
+  </script>
+
+</body>
+</html>
