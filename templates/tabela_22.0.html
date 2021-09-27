@@ -17,10 +17,12 @@
   body{
     
     font-family: "Hina Mincho",sefif;
-    
+    overflow-x: hidden;
     background: rgb(231, 248, 245);
   }
   .titulo{
+    display: flex;
+    justify-content: center;
     float: inline-end;
     background:#2b27eb;
     border-radius: 5px;;
@@ -28,6 +30,11 @@
     text-align: center;
     color: white;
     
+  }
+  .titulo h2{
+    position:absolute;
+    margin-left: 400px;
+    color: white;
   }
   main{
     
@@ -123,12 +130,14 @@
   <form action="{{url_for('tabelaRetorno')}}" method="post">
   <header class="titulo">
     <h1>Tabela</h1>
+    <a href="{{url_for('index')}}" style="text-decoration: none;"><h2>Libelula</h2></a>
+    <a href="{{url_for('imgGrafic')}}" style="text-decoration: none;margin-left: 90px;"><h2>Gráficos</h2></a>
   </header>
 
   <main class="produtos">
     <div class="sub-titulo">
       <h2>Tabela 1.0</h2>
-      <span>Tabela do Libelula.</span>
+      <span>Tabela de Planejamento.</span>
       <select name="mes" id="mes" onclick="tabela.bntFiltro()">
         <option value="true">Filtro Mês</option>
         <option value="true">Todos</option>

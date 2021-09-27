@@ -1,5 +1,4 @@
-from flask import Flask,render_template, json,request,url_for
-from werkzeug.utils import redirect
+from flask import Flask,render_template, json,request,url_for,redirect
 
 
 app = Flask(__name__)
@@ -93,5 +92,10 @@ def tabelaRetorno():
         listaInput = request.form.get('lista_array')
         arquivoTxt.write(f"{listaInput}")
     return redirect(url_for('tabela2'))
+
+
+@app.route("/img")
+def imgGrafic():
+    return render_template("siteImg.html")
 
 app.run(debug=True)

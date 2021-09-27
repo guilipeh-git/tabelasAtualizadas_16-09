@@ -20,13 +20,28 @@
     background: rgb(231, 248, 245);
   }
   .titulo{
-    float: inline-end;
+    display: flex;
+    
     background:#821fa2;
     padding: 10px;
-    text-align: center;
+    justify-content: center;
     color: white;
     
+    
+    
+    
   }
+  .titulo h2{
+    margin: 0 0 0 400px;
+    
+    border-radius: 9px;
+    padding: 5px;
+    color: white;
+    position: absolute ;
+    
+  }
+  
+  
   main{
     
     
@@ -120,6 +135,7 @@
   <form action="{{url_for('tabelaLibelula')}}" method="post">
   <header class="titulo">
     <h1>Tabela</h1>
+    <a href="{{url_for('tabela2')}}" style="text-decoration: none;"><h2>Planejamento</h2></a>
   </header>
 
   <main class="produtos">
@@ -207,7 +223,7 @@
       <button onclick="tabela.cancelar()">Cancelar</button>
       <input  type="submit"   id="botaoDelete">
     </div>
-  
+  <div style="display: flex;flex-direction: column;flex-wrap: wrap;">
   
     <div class="content">
       <table border=1;>
@@ -232,6 +248,7 @@
           
 
         </tbody>
+        </div>
       </div>
       </table>
     </div>
